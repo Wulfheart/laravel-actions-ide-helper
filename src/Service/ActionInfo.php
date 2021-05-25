@@ -2,8 +2,15 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
-use JetBrains\PhpStorm\Pure;
+use Lorisleiva\Actions\Concerns\AsCommand;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\TypeResolver;
 use ReflectionClass;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsCommandGenerator;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsControllerGenerator;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsJobGenerator;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsListenerGenerator;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;
 
 class ActionInfo
 {
@@ -16,6 +23,7 @@ class ActionInfo
     /**@var \Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo[] $parameters */
     public array $parameters = [];
     public string $returnTypehint = "";
+
 
     const AS_ACTION_NAME = "Lorisleiva\Actions\Concerns\AsAction";
     const AS_OBJECT_NAME = "Lorisleiva\Actions\Concerns\AsObject";
@@ -54,17 +62,19 @@ class ActionInfo
             ->setAsController($intersection->contains(ActionInfo::AS_CONTROLLER_NAME))
             ->setAsListener($intersection->contains(ActionInfo::AS_LISTENER_NAME))
             ->setAsJob($intersection->contains(ActionInfo::AS_JOB_NAME))
-            ->setAsCommand($intersection->contains(ActionInfo::AS_COMMAND_NAME))
-        ;
+            ->setAsCommand($intersection->contains(ActionInfo::AS_COMMAND_NAME));
 
 
+        try {
             $function = $reflection->getMethod('handle');
             $ai->setReturnTypehint($function->getReturnType()?->getName());
             foreach ($function->getParameters() as $parameter) {
                 $pi = ParameterInfo::create()
                     ->setName($parameter->getName())
                     ->setNullable($parameter->allowsNull())
-                    ->setPosition($parameter->getPosition());
+                    ->setPosition($parameter->getPosition())
+                    ->setVariadic($parameter->isVariadic())
+                ;
 
                 if ($parameter->hasType()) {
                     $pi->setTypehint($parameter->getType()->getName());
@@ -74,8 +84,7 @@ class ActionInfo
                 }
                 $ai->addParameter($pi);
             }
-        try {
-    } catch (\Throwable) {
+        } catch (\Throwable) {
             return null;
         }
         return $ai;
@@ -130,6 +139,22 @@ class ActionInfo
         return $this;
     }
 
+    public function getNamespace(): string {
+        $name = explode('\\', $this->name);
+        array_pop($name);
+        return implode('\\', $name);
+    }
+
+    public function getClass(): string {
+        $name = explode('\\', $this->name);
+        return $name[array_key_last($name)];
+    }
+
+    public function getReturnType(): ?Type
+    {
+        return (new TypeResolver())->resolve($this->returnTypehint);
+    }
+
     protected static function getAllTraits(ReflectionClass $reflection): array
     {
         $traitNames = [];
@@ -141,6 +166,19 @@ class ActionInfo
             array_push($traitNames, ...ActionInfo::getAllTraits($trait));
         }
         return $traitNames;
+    }
+
+    /**
+     * @return \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\DocBlockGeneratorInterface[]
+     */
+    public function getGenerators(): array{
+        return array_merge(
+            ($this->asCommand ? [AsCommandGenerator::class] : []),
+            ($this->asController ? [AsControllerGenerator::class] : []),
+            ($this->asJob ? [AsJobGenerator::class] : []),
+            ($this->asListener ? [AsListenerGenerator::class] : []),
+            ($this->asObject ? [AsObjectGenerator::class] : []),
+        );
     }
 
 
