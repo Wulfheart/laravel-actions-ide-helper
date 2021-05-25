@@ -18,6 +18,7 @@ use ReflectionClass;
 use Riimu\Kit\PathJoin\Path;
 use Symfony\Component\Finder\Finder;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
+use Wulfheart\LaravelActionsIdeHelper\Service\BuildIdeHelper;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo;
 
@@ -60,29 +61,31 @@ class LaravelActionsIdeHelperCommand extends Command
             }
         }
 
-        dd($infos[0]->getGenerators());
+        // dd($infos[0]->getGenerators());
         // dd($infos[0]);
-        $result = AsObjectGenerator::generate($infos[0]);
-        dd($result);
+        // $result = AsObjectGenerator::generate($infos[0]);
+        $result = BuildIdeHelper::create()->build($infos);
+        file_put_contents(Path::join([base_path(), '_ide_helper_actions.php']), $result);
+        // dd($result);
         // $res = new Type();
         // dd($infos[0]->name);
         //     new Nullable()
-        $type = (new TypeResolver())->resolve('?App\Models\User');
-        $res = new \phpDocumentor\Reflection\DocBlock\Tags\Method("SJHZg", [], $type);
-        $group = collect($infos)->groupBy(function (ActionInfo $item, $key) {
-            return $item->getNamespace();
-        });
+        // $type = (new TypeResolver())->resolve('?App\Models\User');
+        // $res = new \phpDocumentor\Reflection\DocBlock\Tags\Method("SJHZg", [], $type);
+        // $group = collect($infos)->groupBy(function (ActionInfo $item, $key) {
+        //     return $item->getNamespace();
+        // });
 
         // $factory = new BuilderFactory();
-        //
-        // $node1 = $factory->namespace("Test\Here")->addStmt($factory->class("Hello"))->addStmt($factory->class("Hello2"))->getNode();
+        // //
+        // $node1 = $factory->namespace("Test\Here")->addStmt($factory->class("Hello")->setDocComment())->addStmt($factory->class("Hello2"))->getNode();
         // $node2 = $factory->namespace("Test\werfe")->addStmt($factory->class("Hello"))->addStmt($factory->class("Hello2"))->getNode();
         //
         // $printer = new Standard();
         // $data = $printer->prettyPrintFile([$node1, $node2]);
         //
         // file_put_contents(Path::join([base_path(), '_ide_helper_actions.php']), $data);
-        dd($group);
+        // dd($group);
     }
 
 

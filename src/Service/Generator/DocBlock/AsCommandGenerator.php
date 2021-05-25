@@ -14,6 +14,6 @@ class AsCommandGenerator implements DocBlockGeneratorInterface
      */
     public static function generate(ActionInfo $info): array
     {
-        // TODO: Implement generate() method.
+        return [];
     }
 }

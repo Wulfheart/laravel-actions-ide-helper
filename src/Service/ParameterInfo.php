@@ -10,7 +10,7 @@ use phpDocumentor\Reflection\TypeResolver;
 class ParameterInfo
 {
     public string $name;
-    public string $typehint;
+    public ?string $typehint = null;
     public bool $nullable;
     public string $default;
     public bool $variadic;
@@ -69,7 +69,11 @@ class ParameterInfo
     }
 
     public function getArgumentArray(): array {
+        $type = null;
+        if(!is_null($this->typehint)){
         $type = (new TypeResolver())->resolve($this->typehint);
+
+        }
         // TODO: Support default parameters
         // For now I decided to not include them. It should (!) work to include them
         // in the name like "name = 'default'"
