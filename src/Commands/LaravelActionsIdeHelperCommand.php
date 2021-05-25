@@ -25,7 +25,7 @@ class LaravelActionsIdeHelperCommand extends Command
     public function handle()
     {
         $this->traverseFiles();
-        $this->comment('All done');
+        $this->comment('IDE Helpers generated for Laravel Actions at ./_ide_helper_actions.php');
     }
 
     protected function traverseFiles()
