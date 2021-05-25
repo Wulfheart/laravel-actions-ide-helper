@@ -20,7 +20,7 @@ class LaravelActionsIdeHelperCommand extends Command
 {
     public $signature = 'ide-helper:actions';
 
-    public $description = 'My command';
+    public $description = 'Generate a new IDE Helper file for Laravel Actions.';
 
     public function handle()
     {
