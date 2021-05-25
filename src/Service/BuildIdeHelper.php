@@ -23,7 +23,8 @@ class BuildIdeHelper
     /**
      * @param  \Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo[]  $actionInfos
      */
-<<<<<<< HEAD
+
+
     public function build(array $actionInfos): string
     {
 
@@ -65,12 +66,4 @@ class BuildIdeHelper
         return $serializer->getDocComment($db);
     }
 
-
 }
-=======
-    public function build(array $actionInfo): string
-    {
-        return "";
-    }
-}
->>>>>>> fe683b902e0a3a64f135d75bb4da66d447d9e1be

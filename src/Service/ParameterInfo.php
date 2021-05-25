@@ -77,14 +77,11 @@ class ParameterInfo
         return new Param($this->name, $type, $this->variadic);
     }
 
-<<<<<<< HEAD
     public function getArgumentArray(): array {
         $type = null;
         if(!is_null($this->typehint)){
-=======
-    public function getArgumentArray(): array
-    {
->>>>>>> fe683b902e0a3a64f135d75bb4da66d447d9e1be
+
+
         $type = (new TypeResolver())->resolve($this->typehint);
 
         }
