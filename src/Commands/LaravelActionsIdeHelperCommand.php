@@ -4,12 +4,7 @@ namespace Wulfheart\LaravelActionsIdeHelper\Commands;
 
 use Composer\Autoload\ClassMapGenerator;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Php\Factory\Type;
-use phpDocumentor\Reflection\Php\Method;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Nullable;
 use PhpParser\BuilderFactory;
@@ -19,7 +14,6 @@ use Riimu\Kit\PathJoin\Path;
 use Symfony\Component\Finder\Finder;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;
-use Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo;
 
 class LaravelActionsIdeHelperCommand extends Command
 {
@@ -51,12 +45,10 @@ class LaravelActionsIdeHelperCommand extends Command
             try {
                 $reflection = new ReflectionClass($class);
                 $ai = ActionInfo::createFromReflectionClass($reflection);
-                if (!is_null($ai)) {
+                if (! is_null($ai)) {
                     $infos[] = $ai;
                 }
-
             } catch (\Throwable) {
-
             }
         }
 
@@ -84,6 +76,4 @@ class LaravelActionsIdeHelperCommand extends Command
         // file_put_contents(Path::join([base_path(), '_ide_helper_actions.php']), $data);
         dd($group);
     }
-
-
 }

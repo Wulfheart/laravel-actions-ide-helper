@@ -3,12 +3,10 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
-
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsListenerGenerator implements DocBlockGeneratorInterface
 {
-
     /**
      * @inheritDoc
      */
