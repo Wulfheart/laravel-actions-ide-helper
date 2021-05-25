@@ -8,13 +8,13 @@ use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 use Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo;
 
-class AsObjectGenerator implements DocBlockGeneratorInterface
+class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
     /**
      * @param  \Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo  $info
      * @return \phpDocumentor\Reflection\DocBlock\Tag[]
      */
-    public static function generate(ActionInfo $info): array
+    public function generate(ActionInfo $info): array
     {
         $params = array_map(function (ParameterInfo $parameterInfo) {
             return $parameterInfo->getArgumentArray();

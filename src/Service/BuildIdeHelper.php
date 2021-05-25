@@ -56,7 +56,7 @@ class BuildIdeHelper
     {
         $tags = [];
         foreach ($info->getGenerators() as $generator) {
-            $tags = array_merge($tags, $generator::generate($info));
+            $tags = array_merge($tags, $generator::create()->generate($info));
         }
 
 
