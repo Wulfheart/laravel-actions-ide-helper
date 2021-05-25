@@ -3,7 +3,6 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
-
 use JetBrains\PhpStorm\Pure;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Serializer;
@@ -15,14 +14,16 @@ use PhpParser\PrettyPrinter\Standard;
 
 class BuildIdeHelper
 {
-    #[Pure] public static function create(): BuildIdeHelper
-    {
-        return new BuildIdeHelper();
-    }
+    #[Pure]
+ public static function create(): BuildIdeHelper
+ {
+     return new BuildIdeHelper();
+ }
 
     /**
      * @param  \Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo[]  $actionInfos
      */
+<<<<<<< HEAD
     public function build(array $actionInfos): string
     {
 
@@ -66,3 +67,10 @@ class BuildIdeHelper
 
 
 }
+=======
+    public function build(array $actionInfo): string
+    {
+        return "";
+    }
+}
+>>>>>>> fe683b902e0a3a64f135d75bb4da66d447d9e1be

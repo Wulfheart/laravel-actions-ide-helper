@@ -2,7 +2,6 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
-use Lorisleiva\Actions\Concerns\AsCommand;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use ReflectionClass;
@@ -20,7 +19,7 @@ class ActionInfo
     public bool $asJob;
     public bool $asListener;
     public bool $asCommand;
-    /**@var \Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo[] $parameters */
+    /** @var \Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo[] $parameters */
     public array $parameters = [];
     public string $returnTypehint = "";
 
@@ -32,7 +31,6 @@ class ActionInfo
     const AS_JOB_NAME = "Lorisleiva\Actions\Concerns\AsJob";
     const AS_COMMAND_NAME = "Lorisleiva\Actions\Concerns\AsCommand";
     const AS_FAKE_NAME = "Lorisleiva\Actions\Concerns\AsFake";
-
 
     public static function create(): ActionInfo
     {
@@ -87,66 +85,78 @@ class ActionInfo
         } catch (\Throwable) {
             return null;
         }
+
         return $ai;
     }
-
 
     public function setName(string $name): ActionInfo
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setAsObject(bool $asObject): ActionInfo
     {
         $this->asObject = $asObject;
+
         return $this;
     }
 
     public function setAsController(bool $asController): ActionInfo
     {
         $this->asController = $asController;
+
         return $this;
     }
 
     public function setAsJob(bool $asJob): ActionInfo
     {
         $this->asJob = $asJob;
+
         return $this;
     }
 
     public function setAsListener(bool $asListener): ActionInfo
     {
         $this->asListener = $asListener;
+
         return $this;
     }
 
     public function setAsCommand(bool $asCommand): ActionInfo
     {
         $this->asCommand = $asCommand;
+
         return $this;
     }
 
     public function setReturnTypehint(?string $returnTypehint): ActionInfo
     {
         $this->returnTypehint = $returnTypehint ?? '';
+
         return $this;
     }
 
     public function addParameter(ParameterInfo $pi): ActionInfo
     {
         $this->parameters[] = $pi;
+
         return $this;
     }
 
-    public function getNamespace(): string {
+    public function getNamespace(): string
+    {
         $name = explode('\\', $this->name);
         array_pop($name);
+
         return implode('\\', $name);
     }
 
-    public function getClass(): string {
+    public function getClass(): string
+    {
         $name = explode('\\', $this->name);
+
         return $name[array_key_last($name)];
     }
 
@@ -165,13 +175,15 @@ class ActionInfo
             // Get all child traits
             array_push($traitNames, ...ActionInfo::getAllTraits($trait));
         }
+
         return $traitNames;
     }
 
     /**
      * @return \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\DocBlockGeneratorInterface[]
      */
-    public function getGenerators(): array{
+    public function getGenerators(): array
+    {
         return array_merge(
             ($this->asCommand ? [AsCommandGenerator::class] : []),
             ($this->asController ? [AsControllerGenerator::class] : []),
@@ -180,6 +192,4 @@ class ActionInfo
             ($this->asObject ? [AsObjectGenerator::class] : []),
         );
     }
-
-
 }

@@ -3,12 +3,10 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
-
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsJobGenerator implements DocBlockGeneratorInterface
 {
-
     /**
      * @inheritDoc
      */
