@@ -10,12 +10,17 @@ use phpDocumentor\Reflection\TypeResolver;
 
 class FunctionInfo
 {
-    public Type $returnType;
+    public ?Type $returnType = null;
     /** @var \Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo[] $parameterInfos */
     public array $parameterInfos = [];
 
     #[Pure] public static function create(): FunctionInfo {
         return new FunctionInfo();
+    }
+
+    public function __construct()
+    {
+        $this->returnType = null;
     }
 
     public function setReturnType(string $returnType): FunctionInfo

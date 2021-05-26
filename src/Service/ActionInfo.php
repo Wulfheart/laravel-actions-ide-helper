@@ -84,8 +84,6 @@ final class ActionInfo
     }
 
 
-
-
     public function setName(string $name): ActionInfo
     {
         $this->name = $name;
@@ -176,8 +174,9 @@ final class ActionInfo
         return $traitNames;
     }
 
-    protected static function resolveFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo {
-        if($decorator){
+    protected static function resolveFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo
+    {
+        if ($decorator) {
             $namesToTry = [$decorator, 'handle'];
         } else {
             $namesToTry = ['handle'];
@@ -186,16 +185,19 @@ final class ActionInfo
             try {
                 $function = $reflection->getMethod($name);
                 $fi = FunctionInfo::create();
-                $fi->setReturnType($function->getReturnType()?->getName());
+                $rt = $function->getReturnType()?->getName();
+                if (!is_null($rt)) {
+                    $fi->setReturnType($function->getReturnType()?->getName() ?? "");
+                }
                 foreach ($function->getParameters() as $parameter) {
-                    try{
+                    try {
                         $default = $parameter->getDefaultValue();
                         $defaultSet = true;
                         $factory = new BuilderFactory();
                         $node = $factory->param($parameter->getName())->setDefault($default)->getNode();
                         $printer = new Standard();
                         $name = ltrim($printer->prettyPrint([$node]), '$');
-                    } catch (\Throwable){
+                    } catch (\Throwable) {
                         $name = $parameter->getName();
                     }
 
@@ -207,7 +209,7 @@ final class ActionInfo
                     $temp = $parameter->getName();
                     $defaultSet = false;
                     if ($parameter->hasType()) {
-                        $pi->setTypehint($parameter->getType()->getName());
+                        $pi->setTypehint($parameter->getType()?->getName());
                     }
                     if ($parameter->isOptional()) {
                         $pi->setDefault((string) $parameter->getDefaultValue());
@@ -237,7 +239,8 @@ final class ActionInfo
         );
     }
 
-    public function getFunctionInfosByContext(string $ctx): ?FunctionInfo {
+    public function getFunctionInfosByContext(string $ctx): ?FunctionInfo
+    {
         return $this->functionInfos[$ctx] ?? null;
     }
 }

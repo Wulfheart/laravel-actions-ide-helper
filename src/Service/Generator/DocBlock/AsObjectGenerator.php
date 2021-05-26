@@ -22,8 +22,8 @@ class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGenerat
         $functionInfo = $info->getFunctionInfosByContext($this->context);
         $params = array_map(function (ParameterInfo $parameterInfo) {
             return $parameterInfo->getArgumentArray();
-        }, $functionInfo->parameterInfos);
+        }, $functionInfo?->parameterInfos ?? []);
 
-        return [new Method('run', $params, $functionInfo->returnType, true)];
+        return [new Method('run', $params, $functionInfo?->returnType, true)];
     }
 }

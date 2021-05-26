@@ -18,7 +18,7 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
     {
         $params = array_map(function (ParameterInfo $parameterInfo) {
             return $parameterInfo->getArgumentArray();
-        }, $info->getFunctionInfosByContext($this->context)->parameterInfos);
+        }, $info->getFunctionInfosByContext($this->context)?->parameterInfos ?? []);
 
 
         return [
