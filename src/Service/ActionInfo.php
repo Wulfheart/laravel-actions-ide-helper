@@ -2,6 +2,7 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
+use JetBrains\PhpStorm\Pure;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use ReflectionClass;
@@ -11,7 +12,7 @@ use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsJobGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsListenerGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;
 
-class ActionInfo
+final class ActionInfo
 {
     public string $name;
     public bool $asObject;
@@ -19,9 +20,8 @@ class ActionInfo
     public bool $asJob;
     public bool $asListener;
     public bool $asCommand;
-    /** @var \Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo[] $parameters */
-    public array $parameters = [];
-    public string $returnTypehint = "";
+    /** @var array<string, \Wulfheart\LaravelActionsIdeHelper\Service\FunctionInfo> $functionInfos */
+    public array $functionInfos = [];
 
 
     const AS_ACTION_NAME = "Lorisleiva\Actions\Concerns\AsAction";
@@ -32,7 +32,7 @@ class ActionInfo
     const AS_COMMAND_NAME = "Lorisleiva\Actions\Concerns\AsCommand";
     const AS_FAKE_NAME = "Lorisleiva\Actions\Concerns\AsFake";
 
-    public static function create(): ActionInfo
+    #[Pure] public static function create(): ActionInfo
     {
         return new ActionInfo();
     }
@@ -43,51 +43,45 @@ class ActionInfo
 
         $intersection = $traits->intersect([
             // Constants that are hard-coded for now
-            ActionInfo::AS_OBJECT_NAME,
-            ActionInfo::AS_CONTROLLER_NAME,
-            ActionInfo::AS_LISTENER_NAME,
-            ActionInfo::AS_JOB_NAME,
-            ActionInfo::AS_COMMAND_NAME,
+            self::AS_OBJECT_NAME,
+            self::AS_CONTROLLER_NAME,
+            self::AS_LISTENER_NAME,
+            self::AS_JOB_NAME,
+            self::AS_COMMAND_NAME,
         ]);
 
         if ($intersection->count() <= 0) {
             return null;
         }
 
-        $ai = ActionInfo::create()
+        return self::create()
             ->setName($reflection->getName())
-            ->setAsObject($intersection->contains(ActionInfo::AS_OBJECT_NAME))
-            ->setAsController($intersection->contains(ActionInfo::AS_CONTROLLER_NAME))
-            ->setAsListener($intersection->contains(ActionInfo::AS_LISTENER_NAME))
-            ->setAsJob($intersection->contains(ActionInfo::AS_JOB_NAME))
-            ->setAsCommand($intersection->contains(ActionInfo::AS_COMMAND_NAME));
-
-
-        try {
-            $function = $reflection->getMethod('handle');
-            $ai->setReturnTypehint($function->getReturnType()?->getName());
-            foreach ($function->getParameters() as $parameter) {
-                $pi = ParameterInfo::create()
-                    ->setName($parameter->getName())
-                    ->setNullable($parameter->allowsNull())
-                    ->setPosition($parameter->getPosition())
-                    ->setVariadic($parameter->isVariadic())
-                ;
-
-                if ($parameter->hasType()) {
-                    $pi->setTypehint($parameter->getType()->getName());
-                }
-                if ($parameter->isOptional()) {
-                    $pi->setDefault((string) $parameter->getDefaultValue());
-                }
-                $ai->addParameter($pi);
-            }
-        } catch (\Throwable) {
-            return null;
-        }
-
-        return $ai;
+            ->setAsObject($intersection->contains(self::AS_OBJECT_NAME))
+            ->setAsController($intersection->contains(self::AS_CONTROLLER_NAME))
+            ->setAsListener($intersection->contains(self::AS_LISTENER_NAME))
+            ->setAsJob($intersection->contains(self::AS_JOB_NAME))
+            ->setAsCommand($intersection->contains(self::AS_COMMAND_NAME))
+            ->setFunctionInfos([
+                self::AS_OBJECT_NAME => self::getFunctionInfo($reflection),
+                self::AS_CONTROLLER_NAME => self::getFunctionInfo($reflection, 'asController'),
+                self::AS_LISTENER_NAME => self::getFunctionInfo($reflection, 'asListener'),
+                self::AS_JOB_NAME => self::getFunctionInfo($reflection, 'asJob'),
+                self::AS_COMMAND_NAME => self::getFunctionInfo($reflection, 'asCommand'),
+            ]);
     }
+
+
+    /**
+     * @param  array<string, \Wulfheart\LaravelActionsIdeHelper\Service\FunctionInfo>  $functionInfos
+     */
+    public function setFunctionInfos(array $functionInfos): ActionInfo
+    {
+        $this->functionInfos = $functionInfos;
+        return $this;
+    }
+
+
+
 
     public function setName(string $name): ActionInfo
     {
@@ -179,6 +173,41 @@ class ActionInfo
         return $traitNames;
     }
 
+    protected static function getFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo {
+        if($decorator){
+            $namesToTry = [$decorator, 'handle'];
+        } else {
+            $namesToTry = ['handle'];
+        }
+        foreach ($namesToTry as $name) {
+            try {
+                $function = $reflection->getMethod($name);
+                $fi = FunctionInfo::create();
+                $fi->setReturnType($function->getReturnType()?->getName());
+                foreach ($function->getParameters() as $parameter) {
+                    $pi = ParameterInfo::create()
+                        ->setName($parameter->getName())
+                        ->setNullable($parameter->allowsNull())
+                        ->setPosition($parameter->getPosition())
+                        ->setVariadic($parameter->isVariadic());
+
+                    if ($parameter->hasType()) {
+                        $pi->setTypehint($parameter->getType()->getName());
+                    }
+                    if ($parameter->isOptional()) {
+                        $pi->setDefault((string) $parameter->getDefaultValue());
+                    }
+                    $fi->addParameter($pi);
+                }
+
+                return $fi;
+            } catch (\Throwable) {
+
+            }
+        }
+        return null;
+    }
+
     /**
      * @return \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\DocBlockGeneratorInterface[]
      */
@@ -191,5 +220,9 @@ class ActionInfo
             ($this->asListener ? [AsListenerGenerator::class] : []),
             ($this->asObject ? [AsObjectGenerator::class] : []),
         );
+    }
+
+    public function getFunctionInfosByContext(string $ctx): ?FunctionInfo {
+        return $this->functionInfos[$ctx] ?? null;
     }
 }

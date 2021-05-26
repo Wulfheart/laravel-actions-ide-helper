@@ -7,6 +7,7 @@ use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsListenerGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
+    protected string $context = ActionInfo::AS_LISTENER_NAME;
     /**
      * @inheritDoc
      */

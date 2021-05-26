@@ -7,6 +7,7 @@ use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsControllerGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
+    protected string $context = ActionInfo::AS_CONTROLLER_NAME;
     /**
      * @inheritDoc
      */

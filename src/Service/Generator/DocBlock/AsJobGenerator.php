@@ -10,6 +10,7 @@ use Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo;
 
 class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
+    protected string $context = ActionInfo::AS_JOB_NAME;
     /**
      * @inheritDoc
      */
@@ -17,7 +18,7 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
     {
         $params = array_map(function (ParameterInfo $parameterInfo) {
             return $parameterInfo->getArgumentArray();
-        }, $info->parameters);
+        }, $info->getFunctionInfosByContext($this->context)->parameterInfos);
 
 
         return [
