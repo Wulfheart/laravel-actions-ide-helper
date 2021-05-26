@@ -9,6 +9,8 @@ use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Serializer;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\TypeResolver;
 use PhpParser\Builder\Method;
 use PhpParser\Builder\Trait_;
 use PhpParser\BuilderFactory;
@@ -65,24 +67,60 @@ class BuildIdeHelper
         }
 
 
+        return $this->serializeDocBlocks(...$tags);
+    }
+
+    protected function serializeDocBlocks(Tag ...$tags): string {
         $db = new DocBlock('', null, $tags);
         $serializer = new Serializer();
 
         return $serializer->getDocComment($db);
     }
 
+    protected function resolveType(string $type): Type
+    {
+        return (new TypeResolver())->resolve($type);
+    }
+
+    protected function resolveAsUnionType(string ...$types): Type
+    {
+        return (new TypeResolver())->resolve(implode('|', $types));
+    }
+
     protected function getTraitIdeHelpers(BuilderFactory $factory): \PhpParser\Node{
         return $factory->namespace("Lorisleiva\Actions\Concerns")
             ->addStmt(
-                (new Trait_("AsController"))->addStmt((new Method("asController"))->makePublic())
+                (new Trait_("AsController"))->setDocComment(
+                    $this->serializeDocBlocks(
+                        new DocBlock\Tags\Method('asController', [], $this->resolveType('void'))
+                    )
+                )
             )->addStmt(
-                (new Trait_("AsListener"))->addStmt((new Method("asListener"))->setReturnType("void")->makePublic())
+                (new Trait_("AsListener"))->setDocComment(
+                    $this->serializeDocBlocks(
+                        new DocBlock\Tags\Method('asListener', [], $this->resolveType('void'))
+                    )
+                )
             )->addStmt(
-                (new Trait_("AsJob"))->addStmt((new Method("asJob"))->makePublic()->setReturnType("void"))
-            )->addStmt(
-                (new Trait_("AsCommand"))->addStmt((new Method("asCommand"))->makePublic()->setReturnType("void")->addParam(new Param(new \PhpParser\Node\Expr\Variable("command"), type: "\Illuminate\Console\Command")))
+                (new Trait_("AsJob"))->setDocComment(
+                    $this->serializeDocBlocks(
+                        new DocBlock\Tags\Method('asJob', [], $this->resolveType('void'))
+                    )
+                )
+
+            )
+            ->addStmt(
+                (new Trait_("AsCommand"))->setDocComment(
+                    $this->serializeDocBlocks(
+                        new DocBlock\Tags\Method('asCommand',arguments: [
+                            ['name' => 'command', 'type' => $this->resolveType("\Illuminate\Console\Command")]
+                        ], returnType: $this->resolveType('void'))
+                    )
+                )
             )
             ->getNode();
+
+
     }
 
 }
