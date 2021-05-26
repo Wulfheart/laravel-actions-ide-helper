@@ -5,6 +5,9 @@ namespace Wulfheart\LaravelActionsIdeHelper\Service;
 use JetBrains\PhpStorm\Pure;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use PhpParser\BuilderFactory;
+use PhpParser\PrettyPrinter\Standard;
+use PhpParser\PrettyPrinterAbstract;
 use ReflectionClass;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsCommandGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsControllerGenerator;
@@ -62,11 +65,11 @@ final class ActionInfo
             ->setAsJob($intersection->contains(self::AS_JOB_NAME))
             ->setAsCommand($intersection->contains(self::AS_COMMAND_NAME))
             ->setFunctionInfos([
-                self::AS_OBJECT_NAME => self::getFunctionInfo($reflection),
-                self::AS_CONTROLLER_NAME => self::getFunctionInfo($reflection, 'asController'),
-                self::AS_LISTENER_NAME => self::getFunctionInfo($reflection, 'asListener'),
-                self::AS_JOB_NAME => self::getFunctionInfo($reflection, 'asJob'),
-                self::AS_COMMAND_NAME => self::getFunctionInfo($reflection, 'asCommand'),
+                self::AS_OBJECT_NAME => self::resolveFunctionInfo($reflection),
+                self::AS_CONTROLLER_NAME => self::resolveFunctionInfo($reflection, 'asController'),
+                self::AS_LISTENER_NAME => self::resolveFunctionInfo($reflection, 'asListener'),
+                self::AS_JOB_NAME => self::resolveFunctionInfo($reflection, 'asJob'),
+                self::AS_COMMAND_NAME => self::resolveFunctionInfo($reflection, 'asCommand'),
             ]);
     }
 
@@ -173,7 +176,7 @@ final class ActionInfo
         return $traitNames;
     }
 
-    protected static function getFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo {
+    protected static function resolveFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo {
         if($decorator){
             $namesToTry = [$decorator, 'handle'];
         } else {
@@ -185,12 +188,24 @@ final class ActionInfo
                 $fi = FunctionInfo::create();
                 $fi->setReturnType($function->getReturnType()?->getName());
                 foreach ($function->getParameters() as $parameter) {
+                    try{
+                        $default = $parameter->getDefaultValue();
+                        $defaultSet = true;
+                        $factory = new BuilderFactory();
+                        $node = $factory->param($parameter->getName())->setDefault($default)->getNode();
+                        $printer = new Standard();
+                        $name = ltrim($printer->prettyPrint([$node]), '$');
+                    } catch (\Throwable){
+                        $name = $parameter->getName();
+                    }
+
                     $pi = ParameterInfo::create()
-                        ->setName($parameter->getName())
+                        ->setName($name)
                         ->setNullable($parameter->allowsNull())
                         ->setPosition($parameter->getPosition())
                         ->setVariadic($parameter->isVariadic());
-
+                    $temp = $parameter->getName();
+                    $defaultSet = false;
                     if ($parameter->hasType()) {
                         $pi->setTypehint($parameter->getType()->getName());
                     }
