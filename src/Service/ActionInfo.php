@@ -2,13 +2,17 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
+use Barryvdh\LaravelIdeHelper\UsesResolver;
+use Barryvdh\Reflection\DocBlock;
 use JetBrains\PhpStorm\Pure;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\Context;
 use PhpParser\BuilderFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PhpParser\PrettyPrinterAbstract;
 use ReflectionClass;
+use ReflectionMethod;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsCommandGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsControllerGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsJobGenerator;
@@ -174,6 +178,39 @@ final class ActionInfo
         return $traitNames;
     }
 
+    protected static function getReturnTypes(ReflectionMethod $method): array
+    {
+        $types = [];
+
+        // declared return type.
+        if ($returnType = $method->getReturnType()) {
+            $types[] = $returnType->getName();
+
+            if ($returnType->allowsNull()) {
+                $types[] = 'null';
+            }
+        }
+
+        // return type declared in the docblock.
+        if ($comment = $method->getDocComment()) {
+            $aliases = (new UsesResolver())->loadFromClass($method->getDeclaringClass()->getName());
+            $typeResolver = new TypeResolver();
+            $context = new Context($method->getDeclaringClass()->getNamespaceName(), $aliases);
+            $block = new DocBlock($comment, new DocBlock\Context($method->getDeclaringClass()->getNamespaceName(), $aliases));
+            $tags = array_merge($block->getTagsByName('return'), $block->getTagsByName('returns'));
+
+            foreach ($tags as $tag) {
+                $types = array_merge($types,
+                    array_map(function($value) use ($typeResolver, $context) {
+                        return (string)$typeResolver->resolve($value, $context);
+                    }, array_filter(array_map('trim', explode('|', (string)$tag->getContent()))))
+                );
+            }
+        }
+
+        return array_unique(array_filter(array_map('trim', $types)));
+    }
+
     protected static function resolveFunctionInfo(ReflectionClass $reflection, string $decorator = null): ?FunctionInfo
     {
         if ($decorator) {
@@ -185,9 +222,8 @@ final class ActionInfo
             try {
                 $function = $reflection->getMethod($name);
                 $fi = FunctionInfo::create();
-                $rt = $function->getReturnType()?->getName();
-                if (!is_null($rt)) {
-                    $fi->setReturnType($function->getReturnType()?->getName() ?? "");
+                if ($returnTypes = self::getReturnTypes($function)) {
+                    $fi->setReturnType(implode('|', $returnTypes));
                 }
                 foreach ($function->getParameters() as $parameter) {
                     try {
