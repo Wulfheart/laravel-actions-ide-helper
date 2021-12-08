@@ -4,6 +4,7 @@ namespace Wulfheart\LaravelActionsIdeHelper;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Wulfheart\LaravelActionsIdeHelper\Commands\IdeHelperTestCommand;
 use Wulfheart\LaravelActionsIdeHelper\Commands\LaravelActionsIdeHelperCommand;
 
 class LaravelActionsIdeHelperServiceProvider extends PackageServiceProvider
@@ -20,6 +21,7 @@ class LaravelActionsIdeHelperServiceProvider extends PackageServiceProvider
             // ->hasConfigFile()
             // ->hasViews()
             // ->hasMigration('create_laravel-actions-ide-helper_table')
-            ->hasCommand(LaravelActionsIdeHelperCommand::class);
+            ->hasCommand(LaravelActionsIdeHelperCommand::class)
+            ->hasCommands(IdeHelperTestCommand::class);
     }
 }
