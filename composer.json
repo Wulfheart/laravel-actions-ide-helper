@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/contracts": "^8.37",
+        "barryvdh/laravel-ide-helper": "^2.10",
+        "lorisleiva/laravel-actions": "^2.2",
         "riimu/kit-pathjoin": "^1.2",
         "spatie/laravel-package-tools": "^1.4.3"
     },
