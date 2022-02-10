@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "composer/pcre": "^1.0",
         "illuminate/contracts": "^8.37",
         "riimu/kit-pathjoin": "^1.2",
         "spatie/laravel-package-tools": "^1.4.3"
