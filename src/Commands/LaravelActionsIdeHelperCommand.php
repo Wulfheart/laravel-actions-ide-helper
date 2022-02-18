@@ -2,7 +2,6 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Commands;
 
-use Composer\Autoload\ClassMapGenerator;
 use Illuminate\Console\Command;
 use phpDocumentor\Reflection\Php\Factory\Type;
 use phpDocumentor\Reflection\TypeResolver;
@@ -12,6 +11,7 @@ use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass;
 use Riimu\Kit\PathJoin\Path;
 use Symfony\Component\Finder\Finder;
+use Wulfheart\LaravelActionsIdeHelper\ClassMapGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 use Wulfheart\LaravelActionsIdeHelper\Service\BuildIdeHelper;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;

@@ -18,6 +18,7 @@
     "require": {
         "php": "^8.0",
         "illuminate/contracts": "^9.0",
+        "composer/pcre": "^1.0",
         "riimu/kit-pathjoin": "^1.2",
         "spatie/laravel-package-tools": "^1.4.3"
     },
@@ -40,7 +41,8 @@
             "Wulfheart\\LaravelActionsIdeHelper\\Tests\\": "tests"
         }
     },
-    "scripts": [],
+    "scripts": {
+    },
     "config": {
         "sort-packages": true
     },
