@@ -23,10 +23,7 @@ it('creates a correct trait lookup', function() {
 });
 
 it('creates correct ActionInfos', function (){
-    $result = ActionInfoFactory::create(__DIR__ . '/stubs');
-
-    /** @var ActionInfo $ai */
-    $ai = collect($result)->filter(fn(ActionInfo $a) => $a->name == BaseAction::class)->first();
+    $ai = getActionInfo(BaseAction::class);
 
     expect($ai->asObject)->toBeTrue();
     expect($ai->asCommand)->toBeFalse();

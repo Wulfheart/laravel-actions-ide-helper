@@ -21,6 +21,7 @@ final class ActionInfo
 {
     public string $name;
     public string $namespace;
+    public string $fqsen;
     public bool $asObject;
     public bool $asController;
     public bool $asJob;
@@ -44,8 +45,9 @@ final class ActionInfo
 
     public function setName(string $name): ActionInfo
     {
-        $this->namespace = $name;
+        $this->fqsen = $name;
         $this->name = class_basename($name);
+        $this->namespace = Str::of($name)->beforeLast('/' . $this->name);
 
         return $this;
     }
