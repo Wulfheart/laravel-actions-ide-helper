@@ -3,6 +3,7 @@
 namespace Wulfheart\LaravelActionsIdeHelper\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use phpDocumentor\Reflection\File\LocalFile;
 use PhpParser\BuilderFactory;
 use PhpParser\PrettyPrinter\Standard;
@@ -11,6 +12,7 @@ use Riimu\Kit\PathJoin\Path;
 use Symfony\Component\Finder\Finder;
 use Wulfheart\LaravelActionsIdeHelper\ClassMapGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
+use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfoFactory;
 use Wulfheart\LaravelActionsIdeHelper\Service\BuildIdeHelper;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerator;
 
@@ -22,35 +24,15 @@ class LaravelActionsIdeHelperCommand extends Command
 
     public function handle()
     {
-        $this->traverseFiles();
-        $this->comment('IDE Helpers generated for Laravel Actions at ./_ide_helper_actions.php');
-    }
 
-    protected function traverseFiles()
-    {
-        $finder = Finder::create()
-            ->files()
-            ->in(app_path())
-            ->name('*.php');
+        $actionsPath = Path::join(app_path());
 
-        $map = collect(ClassMapGenerator::createMap($finder->getIterator()));
-        $classes = $map->keys();
+        $outfile = Path::join(base_path(), '/_ide_helper_actions.php');
 
-        $infos = [];
+        $actionInfos = ActionInfoFactory::create($actionsPath);
 
-        foreach ($classes as $class) {
-            // Fail gracefully if there is any problem with a reflection class
-            try {
-                $reflection = new ReflectionClass($class);
-                $ai = ActionInfo::createFromReflectionClass($reflection);
-                if (! is_null($ai)) {
-                    $infos[] = $ai;
-                }
-            } catch (\Throwable) {
-            }
-        }
+        $result = BuildIdeHelper::create()->build($actionInfos);
 
-        $result = BuildIdeHelper::create()->build($infos);
-        file_put_contents(Path::join([base_path(), '_ide_helper_actions.php']), $result);
+        $this->comment('IDE Helpers generated for Laravel Actions at ' . Str::of($outfile));
     }
 }

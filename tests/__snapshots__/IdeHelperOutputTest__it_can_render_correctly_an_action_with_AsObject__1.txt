@@ -1,0 +1,146 @@
+<?php
+
+namespace Wulfheart\LaravelActionsIdeHelper\Tests\stubs;
+
+/**
+ * @method static string run()
+ */
+class BaseAction
+{
+}
+/**
+ */
+class EmptyAction
+{
+}
+/**
+ */
+class NewAction
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(mixed $someArguments)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(mixed $someArguments)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(mixed $someArguments)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean, mixed $someArguments)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean, mixed $someArguments)
+ * @method static void dispatchSync(mixed $someArguments)
+ * @method static void dispatchNow(mixed $someArguments)
+ * @method static void dispatchAfterResponse(mixed $someArguments)
+ * @method static mixed run(mixed $someArguments)
+ */
+class TestAction
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $string, float|int $number)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean, string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean, string $string, float|int $number)
+ * @method static void dispatchSync(string $string, float|int $number)
+ * @method static void dispatchNow(string $string, float|int $number)
+ * @method static void dispatchAfterResponse(string $string, float|int $number)
+ * @method static int|string run(string $string, float|int $number)
+ */
+class UnionTypeAction
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $i)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean, int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean, int $i)
+ * @method static void dispatchSync(int $i)
+ * @method static void dispatchNow(int $i)
+ * @method static void dispatchAfterResponse(int $i)
+ * @method static void run(int $i)
+ */
+class VoidAction
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean)
+ * @method static void dispatchSync()
+ * @method static void dispatchNow()
+ * @method static void dispatchAfterResponse()
+ * @method static mixed run()
+ */
+class VoidActionWithNoReturnType
+{
+}
+namespace Wulfheart\LaravelActionsIdeHelper\Tests\stubs\Object;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(string $string, float|int $number)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean, string $string, float|int $number)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean, string $string, float|int $number)
+ * @method static void dispatchSync(string $string, float|int $number)
+ * @method static void dispatchNow(string $string, float|int $number)
+ * @method static void dispatchAfterResponse(string $string, float|int $number)
+ * @method static int|string run(string $string, float|int $number)
+ */
+class ObjectAction
+{
+}
+namespace Wulfheart\LaravelActionsIdeHelper\Tests\stubs\Jobs;
+
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob(int $i)
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob(int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean, int $i)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean, int $i)
+ * @method static void dispatchSync(int $i)
+ * @method static void dispatchNow(int $i)
+ * @method static void dispatchAfterResponse(int $i)
+ */
+class WithDecoratorAction
+{
+}
+/**
+ * @method static \Lorisleiva\Actions\Decorators\JobDecorator|\Lorisleiva\Actions\Decorators\UniqueJobDecorator makeJob()
+ * @method static \Lorisleiva\Actions\Decorators\UniqueJobDecorator makeUniqueJob()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch()
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchIf(phpDocumentor\Reflection\Types\Boolean $boolean)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch|\Illuminate\Support\Fluent dispatchUnless(phpDocumentor\Reflection\Types\Boolean $boolean)
+ * @method static void dispatchSync()
+ * @method static void dispatchNow()
+ * @method static void dispatchAfterResponse()
+ */
+class WithoutDecoratorAction
+{
+}
+namespace Lorisleiva\Actions\Concerns;
+
+/**
+ * @method void asController()
+ */
+trait AsController
+{
+}
+/**
+ * @method void asListener()
+ */
+trait AsListener
+{
+}
+/**
+ * @method void asJob()
+ */
+trait AsJob
+{
+}
+/**
+ * @method void asCommand(\Illuminate\Console\Command $command)
+ */
+trait AsCommand
+{
+}
