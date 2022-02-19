@@ -3,41 +3,30 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
-use JetBrains\PhpStorm\Pure;
-use Lorisleiva\Actions\Concerns\AsController;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Serializer;
 use phpDocumentor\Reflection\DocBlock\Tag;
-use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
-use PhpParser\Builder\Method;
 use PhpParser\Builder\Trait_;
 use PhpParser\BuilderFactory;
 use PhpParser\Comment\Doc;
-use PhpParser\Node\Param;
-use PhpParser\Node\Stmt\Expression;
 use PhpParser\PrettyPrinter\Standard;
 
 class BuildIdeHelper
 {
-    #[Pure]
- public static function create(): BuildIdeHelper
- {
-     return new BuildIdeHelper();
- }
+    public static function create(): BuildIdeHelper
+    {
+        return new BuildIdeHelper();
+    }
 
     /**
      * @param  \Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo[]  $actionInfos
      */
-
-
     public function build(array $actionInfos): string
     {
-
-
         $groups = collect($actionInfos)->groupBy(function (ActionInfo $item) {
-            return $item->getNamespace();
+            return $item->namespace;
         })->toArray();
 
         $nodes = [];
@@ -48,10 +37,10 @@ class BuildIdeHelper
         $factory = new BuilderFactory();
         foreach ($groups as $namespace => $items) {
             $ns = $factory->namespace($namespace);
-            foreach ($items as $item){
-                $ns->addStmt($factory->class($item->getClass())->setDocComment(new Doc($this->generateDocBlocks($item))));
+            foreach ($items as $item) {
+                $ns->addStmt($factory->class($item->classInfo->getName())->setDocComment(new Doc($this->generateDocBlocks($item))));
             }
-           $nodes[] = $ns->getNode();
+            $nodes[] = $ns->getNode();
         }
         $nodes[] = $this->getTraitIdeHelpers($factory);
         $printer = new Standard();
@@ -70,7 +59,8 @@ class BuildIdeHelper
         return $this->serializeDocBlocks(...$tags);
     }
 
-    protected function serializeDocBlocks(Tag ...$tags): string {
+    protected function serializeDocBlocks(Tag ...$tags): string
+    {
         $db = new DocBlock('', null, $tags);
         $serializer = new Serializer();
 
@@ -87,7 +77,8 @@ class BuildIdeHelper
         return (new TypeResolver())->resolve(implode('|', $types));
     }
 
-    protected function getTraitIdeHelpers(BuilderFactory $factory): \PhpParser\Node{
+    protected function getTraitIdeHelpers(BuilderFactory $factory): \PhpParser\Node
+    {
         return $factory->namespace("Lorisleiva\Actions\Concerns")
             ->addStmt(
                 (new Trait_("AsController"))->setDocComment(
@@ -112,8 +103,8 @@ class BuildIdeHelper
             ->addStmt(
                 (new Trait_("AsCommand"))->setDocComment(
                     $this->serializeDocBlocks(
-                        new DocBlock\Tags\Method('asCommand',arguments: [
-                            ['name' => 'command', 'type' => $this->resolveType("\Illuminate\Console\Command")]
+                        new DocBlock\Tags\Method('asCommand', arguments: [
+                            ['name' => 'command', 'type' => $this->resolveType("\Illuminate\Console\Command")],
                         ], returnType: $this->resolveType('void'))
                     )
                 )
