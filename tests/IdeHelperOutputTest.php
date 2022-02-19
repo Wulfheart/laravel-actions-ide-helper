@@ -11,3 +11,11 @@ it('can render the output so it matches the ', function() {
 
     assertMatchesSnapshot($result);
 });
+
+it('can render intersection types ', function() {
+    $actionInfos = ActionInfoFactory::create(__DIR__ . '/stubs/IntersectionTypes');
+
+    $result = BuildIdeHelper::create()->build($actionInfos);
+
+    assertMatchesSnapshot($result);
+});
