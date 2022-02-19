@@ -5,6 +5,7 @@ namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
 use phpDocumentor\Reflection\Php\Argument;
 use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\TypeResolver;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class DocBlockGeneratorBase implements DocBlockGeneratorInterface
@@ -12,6 +13,16 @@ class DocBlockGeneratorBase implements DocBlockGeneratorInterface
     public static function create(): static
     {
         return new static();
+    }
+
+    protected function resolveType(string $type): Type
+    {
+        return (new TypeResolver())->resolve($type);
+    }
+
+    protected function resolveAsUnionType(string ...$types): Type
+    {
+        return (new TypeResolver())->resolve(implode('|', $types));
     }
 
     public function generate(ActionInfo $info): array
