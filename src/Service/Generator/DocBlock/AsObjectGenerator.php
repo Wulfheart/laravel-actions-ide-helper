@@ -21,10 +21,7 @@ class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGenerat
     public function generate(ActionInfo $info): array
     {
         /** @var Method $method */
-        $method = collect($info->classInfo->getMethods())
-            ->filter(fn(\phpDocumentor\Reflection\Php\Method $m) => $m->getName() == 'handle')
-            ->firstOrFail();
-
-        return [new Method('run', $this->convertArguments($method->getArguments()), $method->getReturnType(), true)];
+        $method = $this->findMethod($info, 'handle');
+        return $method == null ? [] : [new Method('run', $this->convertArguments($method->getArguments()), $method->getReturnType(), true)];
     }
 }
