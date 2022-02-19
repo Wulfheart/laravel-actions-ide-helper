@@ -9,6 +9,9 @@ class TestAction
     use AsAction;
 
 
+    /**
+     * @returns int
+     */
     public function handle(...$someArguments)
     {
         // Your action logic here...
