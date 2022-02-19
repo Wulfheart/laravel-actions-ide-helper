@@ -3,6 +3,12 @@
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
 use JetBrains\PhpStorm\Pure;
+use Lorisleiva\Actions\Concerns\AsCommand;
+use Lorisleiva\Actions\Concerns\AsController;
+use Lorisleiva\Actions\Concerns\AsFake;
+use Lorisleiva\Actions\Concerns\AsJob;
+use Lorisleiva\Actions\Concerns\AsListener;
+use Lorisleiva\Actions\Concerns\AsObject;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use PhpParser\BuilderFactory;
@@ -26,52 +32,41 @@ final class ActionInfo
     /** @var array<string, \Wulfheart\LaravelActionsIdeHelper\Service\FunctionInfo> $functionInfos */
     public array $functionInfos = [];
 
-
-    const AS_ACTION_NAME = "Lorisleiva\Actions\Concerns\AsAction";
-    const AS_OBJECT_NAME = "Lorisleiva\Actions\Concerns\AsObject";
-    const AS_CONTROLLER_NAME = "Lorisleiva\Actions\Concerns\AsController";
-    const AS_LISTENER_NAME = "Lorisleiva\Actions\Concerns\AsListener";
-    const AS_JOB_NAME = "Lorisleiva\Actions\Concerns\AsJob";
-    const AS_COMMAND_NAME = "Lorisleiva\Actions\Concerns\AsCommand";
-    const AS_FAKE_NAME = "Lorisleiva\Actions\Concerns\AsFake";
+    const ALL_TRAITS = [
+        AsObject::class,
+        AsController::class,
+        AsJob::class,
+        AsListener::class,
+        AsCommand::class,
+        AsFake::class,
+    ];
 
     #[Pure] public static function create(): ActionInfo
     {
         return new ActionInfo();
     }
 
-    public static function createFromReflectionClass(ReflectionClass $reflection): ?ActionInfo
-    {
-        $traits = collect(ActionInfo::getAllTraits($reflection));
-
-        $intersection = $traits->intersect([
-            // Constants that are hard-coded for now
-            self::AS_OBJECT_NAME,
-            self::AS_CONTROLLER_NAME,
-            self::AS_LISTENER_NAME,
-            self::AS_JOB_NAME,
-            self::AS_COMMAND_NAME,
-        ]);
-
-        if ($intersection->count() <= 0) {
-            return null;
-        }
-
-        return self::create()
-            ->setName($reflection->getName())
-            ->setAsObject($intersection->contains(self::AS_OBJECT_NAME))
-            ->setAsController($intersection->contains(self::AS_CONTROLLER_NAME))
-            ->setAsListener($intersection->contains(self::AS_LISTENER_NAME))
-            ->setAsJob($intersection->contains(self::AS_JOB_NAME))
-            ->setAsCommand($intersection->contains(self::AS_COMMAND_NAME))
-            ->setFunctionInfos([
-                self::AS_OBJECT_NAME => self::resolveFunctionInfo($reflection),
-                self::AS_CONTROLLER_NAME => self::resolveFunctionInfo($reflection, 'asController'),
-                self::AS_LISTENER_NAME => self::resolveFunctionInfo($reflection, 'asListener'),
-                self::AS_JOB_NAME => self::resolveFunctionInfo($reflection, 'asJob'),
-                self::AS_COMMAND_NAME => self::resolveFunctionInfo($reflection, 'asCommand'),
-            ]);
-    }
+    // public static function createFromReflectionClass(ReflectionClass $reflection): ?ActionInfo
+    // {
+    //     // if ($intersection->count() <= 0) {
+    //     //     return null;
+    //     // }
+    //     //
+    //     // return self::create()
+    //     //     ->setName($reflection->getName())
+    //     //     ->setAsObject($intersection->contains(self::AS_OBJECT_NAME))
+    //     //     ->setAsController($intersection->contains(self::AS_CONTROLLER_NAME))
+    //     //     ->setAsListener($intersection->contains(self::AS_LISTENER_NAME))
+    //     //     ->setAsJob($intersection->contains(self::AS_JOB_NAME))
+    //     //     ->setAsCommand($intersection->contains(self::AS_COMMAND_NAME))
+    //     //     ->setFunctionInfos([
+    //     //         self::AS_OBJECT_NAME => self::resolveFunctionInfo($reflection),
+    //     //         self::AS_CONTROLLER_NAME => self::resolveFunctionInfo($reflection, 'asController'),
+    //     //         self::AS_LISTENER_NAME => self::resolveFunctionInfo($reflection, 'asListener'),
+    //     //         self::AS_JOB_NAME => self::resolveFunctionInfo($reflection, 'asJob'),
+    //     //         self::AS_COMMAND_NAME => self::resolveFunctionInfo($reflection, 'asCommand'),
+    //     //     ]);
+    // }
 
 
     /**

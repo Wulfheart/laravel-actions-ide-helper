@@ -15,8 +15,21 @@ class ActionInfoFactory
     /** @return array<\Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo> */
     public static function create(string $path): array
     {
+        $factory = new self();
+        $classes = $factory->loadFromPath($path);
 
-        return [];
+        $ais = [];
+        foreach ($classes as $class => $traits){
+            $tc = collect($traits);
+            $ais[] = ActionInfo::create()
+                ->setName($class)
+                ->setAsObject($tc->contains(AsObject::class))
+                ->setAsCommand($tc->contains(AsCommand::class))
+                ->setAsController($tc->contains(AsController::class))
+                ->setAsJob($tc->contains(AsJob::class))
+                ->setAsListener($tc->contains(AsListener::class));
+        }
+        return $ais;
 
 
     }
