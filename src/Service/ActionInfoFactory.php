@@ -2,6 +2,7 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
+use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsCommand;
 use Lorisleiva\Actions\Concerns\AsController;
 use Lorisleiva\Actions\Concerns\AsFake;
@@ -22,7 +23,7 @@ class ActionInfoFactory
     {
         $factory = new self();
         $classes = $factory->loadFromPath($path);
-
+        $classMap = $factory->loadPhpDocumentorReflectionClassMap($path);
         $ais = [];
         foreach ($classes as $class => $traits){
             $tc = collect($traits);
@@ -34,7 +35,7 @@ class ActionInfoFactory
                 ->setAsController($tc->contains(AsController::class))
                 ->setAsJob($tc->contains(AsJob::class))
                 ->setAsListener($tc->contains(AsListener::class))
-                ;
+                ->setClassInfo($classMap[$class]);
         }
         return $ais;
 
@@ -73,7 +74,11 @@ class ActionInfoFactory
 
         /** @var \phpDocumentor\Reflection\Php\Project $project */
         $project = ProjectFactory::createInstance()->create('Laravel Actions IDE Helper', $files);
-        return collect($project->getFiles())->map(fn(File $f) => $f->getClasses())->collapse()->toArray();
+        return collect($project->getFiles())
+            ->map(fn(File $f) => $f->getClasses())
+            ->collapse()
+            ->mapWithKeys(fn($item, string $key) => [Str::of($key)->ltrim("\\")->toString() => $item])
+            ->toArray();
 
     }
 
