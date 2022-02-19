@@ -2,6 +2,7 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service;
 
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 use Lorisleiva\Actions\Concerns\AsCommand;
 use Lorisleiva\Actions\Concerns\AsController;
@@ -10,12 +11,6 @@ use Lorisleiva\Actions\Concerns\AsJob;
 use Lorisleiva\Actions\Concerns\AsListener;
 use Lorisleiva\Actions\Concerns\AsObject;
 use phpDocumentor\Reflection\Php\Class_;
-use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\TypeResolver;
-use PhpParser\BuilderFactory;
-use PhpParser\PrettyPrinter\Standard;
-use PhpParser\PrettyPrinterAbstract;
-use ReflectionClass;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsCommandGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsControllerGenerator;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsJobGenerator;
@@ -25,6 +20,7 @@ use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerat
 final class ActionInfo
 {
     public string $name;
+    public string $namespace;
     public bool $asObject;
     public bool $asController;
     public bool $asJob;
@@ -48,7 +44,8 @@ final class ActionInfo
 
     public function setName(string $name): ActionInfo
     {
-        $this->name = $name;
+        $this->namespace = $name;
+        $this->name = class_basename($name);
 
         return $this;
     }
