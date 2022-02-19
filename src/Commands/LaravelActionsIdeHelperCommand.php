@@ -3,9 +3,7 @@
 namespace Wulfheart\LaravelActionsIdeHelper\Commands;
 
 use Illuminate\Console\Command;
-use phpDocumentor\Reflection\Php\Factory\Type;
-use phpDocumentor\Reflection\TypeResolver;
-use phpDocumentor\Reflection\Types\Nullable;
+use phpDocumentor\Reflection\File\LocalFile;
 use PhpParser\BuilderFactory;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass;
@@ -36,7 +34,6 @@ class LaravelActionsIdeHelperCommand extends Command
             ->name('*.php');
 
         $map = collect(ClassMapGenerator::createMap($finder->getIterator()));
-        // dd($map);
         $classes = $map->keys();
 
         $infos = [];

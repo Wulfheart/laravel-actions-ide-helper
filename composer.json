@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.0",
         "illuminate/contracts": "^9.0",
-        "composer/pcre": "^1.0",
+        "phpdocumentor/reflection": "^5.1",
         "riimu/kit-pathjoin": "^1.2",
         "spatie/laravel-package-tools": "^1.4.3"
     },
@@ -26,6 +26,7 @@
         "brianium/paratest": "^6.4",
         "nunomaduro/collision": "^6.0",
         "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.21",
         "phpunit/phpunit": "^9.5.10",
         "spatie/laravel-ray": "^1.29",
         "vimeo/psalm": "^4.20"
@@ -44,7 +45,11 @@
     "scripts": {
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {
