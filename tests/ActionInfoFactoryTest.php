@@ -5,13 +5,13 @@ use Lorisleiva\Actions\Concerns\AsObject;
 use phpDocumentor\Reflection\Php\Class_;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfoFactory;
-use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\BaseAction;
-use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\NewAction;
-use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\NotAnAction;
-use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\TestAction;
+use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\GeneralTests\BaseAction;
+use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\GeneralTests\NewAction;
+use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\GeneralTests\NotAnAction;
+use Wulfheart\LaravelActionsIdeHelper\Tests\stubs\GeneralTests\TestAction;
 
 it('creates a correct trait lookup', function() {
-    $result = invade(new ActionInfoFactory())->loadFromPath(__DIR__ . '/stubs');
+    $result = invade(new ActionInfoFactory())->loadFromPath(__DIR__ . '/stubs/GeneralTests');
 
     expect($result)->toBeArray()->toMatchArray([
         BaseAction::class => [AsObject::class],
@@ -23,7 +23,7 @@ it('creates a correct trait lookup', function() {
 });
 
 it('creates correct ActionInfos', function (){
-    $result = ActionInfoFactory::create(__DIR__ . '/stubs');
+    $result = ActionInfoFactory::create(__DIR__ . '/stubs/GeneralTests');
 
     /** @var ActionInfo $ai */
     $ai = collect($result)->filter(fn(ActionInfo $a) => $a->name == BaseAction::class)->first();
@@ -36,7 +36,7 @@ it('creates correct ActionInfos', function (){
 });
 
 it('parses the classes correctly', function() {
-    $result = invade(new ActionInfoFactory())->loadPhpDocumentorReflectionClassMap(__DIR__ . '/stubs');
+    $result = invade(new ActionInfoFactory())->loadPhpDocumentorReflectionClassMap(__DIR__ . '/stubs/GeneralTests');
 
     $keys = collect($result)->keys()->toArray();
     expect($keys)->toContain(NotAnAction::class, BaseAction::class, NotAnAction::class, TestAction::class);
