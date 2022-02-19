@@ -30,3 +30,9 @@ it('creates correct ActionInfos', function (){
     expect($ai->asObject)->toBeTrue();
     expect($ai->asCommand)->toBeFalse();
 });
+
+it('parses the classes correctly', function() {
+    $result = invade(new ActionInfoFactory())->loadPhpDocumentorReflectionClassMap(__DIR__ . '/stubs');
+
+    expect(collect($result)->keys()->toArray())->not()->toContain(NotAnAction::class, BaseAction::class, NotAnAction::class, TestAction::class);
+});
