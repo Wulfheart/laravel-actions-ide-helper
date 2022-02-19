@@ -3,15 +3,16 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
+use Lorisleiva\Actions\Concerns\AsObject;
 use phpDocumentor\Reflection\DocBlock\Tags\Method;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
+use phpDocumentor\Reflection\Php\Argument;
 use phpDocumentor\Reflection\TypeResolver;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
-use Wulfheart\LaravelActionsIdeHelper\Service\ParameterInfo;
 
 class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
-    protected string $context = ActionInfo::AS_OBJECT_NAME;
+    protected string $context = AsObject::class;
 
     /**
      * @param  \Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo  $info
@@ -19,11 +20,11 @@ class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGenerat
      */
     public function generate(ActionInfo $info): array
     {
-        $functionInfo = $info->getFunctionInfosByContext($this->context);
-        $params = array_map(function (ParameterInfo $parameterInfo) {
-            return $parameterInfo->getArgumentArray();
-        }, $functionInfo?->parameterInfos ?? []);
+        /** @var Method $method */
+        $method = collect($info->classInfo->getMethods())
+            ->filter(fn(\phpDocumentor\Reflection\Php\Method $m) => $m->getName() == 'handle')
+            ->firstOrFail();
 
-        return [new Method('run', $params, $functionInfo?->returnType, true)];
+        return [new Method('run', $this->convertArguments($method->getArguments()), $method->getReturnType(), true)];
     }
 }
