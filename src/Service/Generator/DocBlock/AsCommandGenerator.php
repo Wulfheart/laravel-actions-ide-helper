@@ -3,11 +3,12 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
+use Lorisleiva\Actions\Concerns\AsCommand;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsCommandGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
-    protected string $context = ActionInfo::AS_COMMAND_NAME;
+    protected string $context = AsCommand::class;
     /**
      * @inheritDoc
      */

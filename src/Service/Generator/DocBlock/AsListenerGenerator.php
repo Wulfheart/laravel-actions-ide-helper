@@ -3,11 +3,12 @@
 
 namespace Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock;
 
+use Lorisleiva\Actions\Concerns\AsListener;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsListenerGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
 {
-    protected string $context = ActionInfo::AS_LISTENER_NAME;
+    protected string $context = AsListener::class;
     /**
      * @inheritDoc
      */
