@@ -8,10 +8,9 @@ use Illuminate\Support\Fluent;
 use Lorisleiva\Actions\Concerns\AsJob;
 use Lorisleiva\Actions\Decorators\JobDecorator;
 use Lorisleiva\Actions\Decorators\UniqueJobDecorator;
-use phpDocumentor\Reflection\DocBlock\Tags\Method;
-use phpDocumentor\Reflection\DocBlock\Tags\Param;
+use phpDocumentor\Reflection\Php\Argument;
 use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\UnionType;
+use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\Custom\Method;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
 class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
@@ -30,7 +29,7 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
             return [];
         }
 
-        $args = $this->convertArguments($method->getArguments());
+        $args = $method->getArguments();
 
 
         return [
@@ -39,11 +38,11 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
             new Method('makeUniqueJob', $args, $this->resolveType(UniqueJobDecorator::class), true),
             new Method('dispatch', $args, $this->resolveType(PendingDispatch::class), true),
             new Method('dispatchIf',
-                collect($args)->prepend(['name' => 'boolean', 'type' => 'bool'])->toArray(),
+                collect($args)->prepend(new Argument('boolean', new Boolean()))->toArray(),
                 $this->resolveAsUnionType(PendingDispatch::class, Fluent::class),
                 true),
             new Method('dispatchUnless',
-                collect($args)->prepend(['name' => 'boolean', 'type' => 'bool'])->toArray(),
+                collect($args)->prepend(new Argument('boolean', new Boolean()))->toArray(),
                 $this->resolveAsUnionType(PendingDispatch::class, Fluent::class),
                 true),
             new Method('dispatchSync', $args, null, true),

@@ -36,7 +36,9 @@ class DocBlockGeneratorBase implements DocBlockGeneratorInterface
      * @phpstan-return array<int, array<string, Type|string>>
      */
     protected function convertArguments(array $arguments): array {
-        return collect($arguments)->transform(fn(Argument $arg) => ['name' => $arg->getName(),'type' => $arg->getType()])->toArray();
+        return collect($arguments)
+            ->transform(fn(Argument $arg) => ['name' => $arg->getName(),'type' => $arg->getType()])
+            ->toArray();
     }
 
     protected function findMethod(ActionInfo $info, string ...$methods): ?\phpDocumentor\Reflection\Php\Method {
