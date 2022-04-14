@@ -1,5 +1,9 @@
 <?php
-// config for Wulfheart/ClassName
+
 return [
+
+    'actions_paths' => [
+        app_path('Actions')
+    ],
 
 ];
