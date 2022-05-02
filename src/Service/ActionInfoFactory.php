@@ -5,7 +5,6 @@ namespace Wulfheart\LaravelActionsIdeHelper\Service;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsCommand;
 use Lorisleiva\Actions\Concerns\AsController;
-use Lorisleiva\Actions\Concerns\AsFake;
 use Lorisleiva\Actions\Concerns\AsJob;
 use Lorisleiva\Actions\Concerns\AsListener;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -18,7 +17,10 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class ActionInfoFactory
 {
-    /** @return array<\Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo> */
+    /**
+     * @return array<\Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo>
+     * @throws \phpDocumentor\Reflection\Exception
+     */
     public static function create(string $path): array
     {
         $factory = new self();
@@ -27,7 +29,6 @@ class ActionInfoFactory
         $ais = [];
         foreach ($classes as $class => $traits){
             $tc = collect($traits);
-            $reflection = new \ReflectionClass($class);
             $ais[] = ActionInfo::create()
                 ->setName($class)
                 ->setAsObject($tc->contains(AsObject::class))
@@ -38,12 +39,10 @@ class ActionInfoFactory
                 ->setClassInfo($classMap[$class]);
         }
         return $ais;
-
-
     }
 
     /** @return array<class-string,array<class-string>> */
-    protected function loadFromPath(string $path)
+    protected function loadFromPath(string $path): array
     {
         $res = Lody::classes($path)->isNotAbstract();
         /** @var array<class-string,array<class-string>> $traits */
@@ -65,7 +64,8 @@ class ActionInfoFactory
             ->toArray();
     }
 
-    /** @return array<\phpDocumentor\Reflection\Php\Class_>
+    /**
+     * @return array<\phpDocumentor\Reflection\Php\Class_>
      * @throws \phpDocumentor\Reflection\Exception
      */
     protected function loadPhpDocumentorReflectionClassMap(string $path): array{
@@ -79,7 +79,6 @@ class ActionInfoFactory
             ->collapse()
             ->mapWithKeys(fn($item, string $key) => [(string) Str::of($key)->ltrim("\\") => $item])
             ->toArray();
-
     }
 
 }

@@ -38,8 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Wulfheart\\LaravelActionsIdeHelper\\": "src",
-            "Wulfheart\\LaravelActionsIdeHelper\\Database\\Factories\\": "database/factories"
+            "Wulfheart\\LaravelActionsIdeHelper\\": "src"
         }
     },
     "autoload-dev": {

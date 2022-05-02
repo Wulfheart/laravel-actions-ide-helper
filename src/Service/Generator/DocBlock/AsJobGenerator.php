@@ -13,7 +13,7 @@ use phpDocumentor\Reflection\Types\Boolean;
 use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\Custom\Method;
 use Wulfheart\LaravelActionsIdeHelper\Service\ActionInfo;
 
-class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorInterface
+class AsJobGenerator extends DocBlockGeneratorBase
 {
     protected string $context = AsJob::class;
 
@@ -25,7 +25,7 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
 
         $method = $this->findMethod($info, 'asJob', 'handle');
 
-        if ($method == null) {
+        if ($method === null) {
             return [];
         }
 
@@ -50,6 +50,4 @@ class AsJobGenerator extends DocBlockGeneratorBase implements DocBlockGeneratorI
             new Method('dispatchAfterResponse', $args, null, true),
         ];
     }
-
-
 }
