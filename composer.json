@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/contracts": "^9.0",
+        "illuminate/contracts": "^8.15|^9.0",
         "lorisleiva/laravel-actions": "^2.3",
         "lorisleiva/lody": "^0.3.0",
         "phpdocumentor/reflection": "^5.1",

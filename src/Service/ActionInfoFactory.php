@@ -77,7 +77,7 @@ class ActionInfoFactory
         return collect($project->getFiles())
             ->map(fn(File $f) => $f->getClasses())
             ->collapse()
-            ->mapWithKeys(fn($item, string $key) => [Str::of($key)->ltrim("\\")->toString() => $item])
+            ->mapWithKeys(fn($item, string $key) => [(string) Str::of($key)->ltrim("\\") => $item])
             ->toArray();
 
     }
