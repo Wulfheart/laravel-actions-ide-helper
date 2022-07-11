@@ -22,6 +22,12 @@ class AsObjectGenerator extends DocBlockGeneratorBase implements DocBlockGenerat
     {
         /** @var Method $method */
         $method = $this->findMethod($info, 'handle');
-        return $method == null ? [] : [new \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\Custom\Method('run', $method->getArguments(), $method->getReturnType(), true)];
+        $return = [];
+        if ($method != null) {
+            $return[] = new \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\Custom\Method('run', $method->getArguments(), $method->getReturnType(), true);
+        }
+
+        $return[] = new \Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\Custom\Method('make', [], $this->resolveType($info->fqsen), true);
+        return $return;
     }
 }
