@@ -16,25 +16,25 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "illuminate/contracts": "^9.0",
+        "php": "^8.1",
+        "illuminate/contracts": "^10.0",
         "lorisleiva/laravel-actions": "^2.3",
         "lorisleiva/lody": "^0.3.0",
         "phpdocumentor/reflection": "^5.1",
         "ridzhi/docbuilder": "^1.0",
         "riimu/kit-pathjoin": "^1.2",
-        "spatie/laravel-package-tools": "^1.4.3"
+        "spatie/laravel-package-tools": "^1.14"
     },
     "require-dev": {
-        "brianium/paratest": "^6.4",
-        "nunomaduro/collision": "^6.0",
-        "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.21",
+        "brianium/paratest": "^6.8",
+        "nunomaduro/collision": "^6.1",
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^1.22",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/invade": "^1.0",
-        "spatie/laravel-ray": "^1.29",
+        "spatie/invade": "^1.1",
+        "spatie/laravel-ray": "^1.32",
         "spatie/pest-plugin-snapshots": "^1.1",
-        "vimeo/psalm": "^4.20"
+        "vimeo/psalm": "^5.6"
     },
     "autoload": {
         "psr-4": {
@@ -47,8 +47,7 @@
             "Wulfheart\\LaravelActionsIdeHelper\\Tests\\": "tests"
         }
     },
-    "scripts": {
-    },
+    "scripts": [],
     "config": {
         "sort-packages": true,
         "allow-plugins": {
