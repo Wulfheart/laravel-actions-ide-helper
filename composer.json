@@ -16,9 +16,9 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "illuminate/contracts": "^10.0",
-        "lorisleiva/laravel-actions": "^2.5",
+        "lorisleiva/laravel-actions": "^2.3",
         "lorisleiva/lody": "^0.4.0",
         "phpdocumentor/reflection": "^5.1",
         "ridzhi/docbuilder": "^1.0",
