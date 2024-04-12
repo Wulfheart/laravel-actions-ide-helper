@@ -9,7 +9,7 @@ use phpDocumentor\Reflection\Type;
 
 class Method extends BaseTag
 {
-    protected $name = 'method';
+    protected string $name = 'method';
 
     /**
      * @param  string  $methodName
@@ -23,7 +23,7 @@ class Method extends BaseTag
         protected array $arguments = [],
         protected ?Type $returnType = null,
         protected bool $static = false,
-        protected $description = null
+        protected ?Description $description = null
     ) {
 
     }
