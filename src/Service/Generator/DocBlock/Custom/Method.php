@@ -72,9 +72,9 @@ class Method extends BaseTag
 
         $s .= '$'.$argument->getName();
 
-        $default = $argument->getDefault();
-        if ($default) {
-            $s .= ' = ' . $default;
+        $default = $argument->getDefault(false);
+        if ($default !== null) {
+            $s .= ' = ' . (string) $default;
         }
 
         return $s;
