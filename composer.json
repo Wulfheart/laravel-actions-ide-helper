@@ -21,6 +21,7 @@
         "lorisleiva/laravel-actions": "^2.3",
         "lorisleiva/lody": "^0.5|^0.6|^0.7",
         "phpdocumentor/reflection": "^5.1|^6.0",
+        "phpdocumentor/reflection-docblock": "^5.4",
         "riimu/kit-pathjoin": "^1.2",
         "spatie/laravel-package-tools": "^1.14"
     },
