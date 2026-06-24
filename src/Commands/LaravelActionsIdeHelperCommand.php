@@ -18,18 +18,32 @@ use Wulfheart\LaravelActionsIdeHelper\Service\Generator\DocBlock\AsObjectGenerat
 
 class LaravelActionsIdeHelperCommand extends Command
 {
-    public $signature = 'ide-helper:actions';
+    public $signature = 'ide-helper:actions {--dir=* : The extra directories to scan for actions}';
 
     public $description = 'Generate a new IDE Helper file for Laravel Actions.';
 
     public function handle()
     {
 
-        $actionsPath = Path::join(app_path() . '/Actions');
+        $actionsPaths = [
+            Path::join(app_path() . '/Actions')
+        ];
+        if ($this->option('dir')) {
+            $actionsPaths = array_merge($actionsPaths, array_map('base_path', $this->option('dir')));
+        }
 
         $outfile = Path::join(base_path(), '/_ide_helper_actions.php');
-
-        $actionInfos = ActionInfoFactory::create($actionsPath);
+        $actionInfos=[];
+        foreach($actionsPaths as $actionsPath) {
+            if(!is_dir($actionsPath)) {
+                continue;
+            }
+            $actionInfos+=ActionInfoFactory::create($actionsPath);
+        }
+        if (empty($actionInfos)) {
+            $this->warn('No actions found in the specified directories.');
+            return;
+        }
 
         $result = BuildIdeHelper::create()->build($actionInfos);
 
