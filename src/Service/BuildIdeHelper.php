@@ -83,19 +83,19 @@ class BuildIdeHelper
             ->addStmt(
                 (new Trait_("AsController"))->setDocComment(
                     $this->serializeDocBlocks(
-                        new DocBlock\Tags\Method('asController', [], $this->resolveType('void'))
+                        new DocBlock\Tags\Method('asController', returnType: $this->resolveType('void'), parameters: [])
                     )
                 )
             )->addStmt(
                 (new Trait_("AsListener"))->setDocComment(
                     $this->serializeDocBlocks(
-                        new DocBlock\Tags\Method('asListener', [], $this->resolveType('void'))
+                        new DocBlock\Tags\Method('asListener', returnType: $this->resolveType('void'), parameters: [])
                     )
                 )
             )->addStmt(
                 (new Trait_("AsJob"))->setDocComment(
                     $this->serializeDocBlocks(
-                        new DocBlock\Tags\Method('asJob', [], $this->resolveType('void'))
+                        new DocBlock\Tags\Method('asJob', returnType: $this->resolveType('void'), parameters: [])
                     )
                 )
 
@@ -103,9 +103,9 @@ class BuildIdeHelper
             ->addStmt(
                 (new Trait_("AsCommand"))->setDocComment(
                     $this->serializeDocBlocks(
-                        new DocBlock\Tags\Method('asCommand', arguments: [
-                            ['name' => 'command', 'type' => $this->resolveType("\Illuminate\Console\Command")],
-                        ], returnType: $this->resolveType('void'))
+                        new DocBlock\Tags\Method('asCommand', returnType: $this->resolveType('void'), parameters: [
+                            new DocBlock\Tags\MethodParameter('command', $this->resolveType("\Illuminate\Console\Command")),
+                        ])
                     )
                 )
             )
