@@ -47,7 +47,7 @@
             "Wulfheart\\LaravelActionsIdeHelper\\Tests\\": "tests"
         }
     },
-    "scripts": [],
+    "scripts": {},
     "config": {
         "sort-packages": true,
         "allow-plugins": {
